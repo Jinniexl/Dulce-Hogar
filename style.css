@@ -740,45 +740,61 @@ footer::after {
         max-width: 250px;
         text-align: center;
     }
-        /* Ajustes generales para celulares */
+    
+/*RESPONSIVE PARA CELULARES*/
+
+@media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
 
     header {
-        padding: 20px 15px 15px;
+        padding: 18px 15px;
     }
 
     header img {
-        width: 110px;
+        width: 105px;
     }
 
     header h1 {
         font-size: 2rem;
-        margin-bottom: 12px;
-    }
-
-    nav a {
-        font-size: 0.85rem;
-        padding: 8px 14px;
     }
 
     section {
-        padding: 45px 15px !important;
+        width: calc(100% - 30px);
+        margin: 0 auto;
+        padding: 40px 10px !important;
     }
 
-    h2 {
-        font-size: 2rem !important;
+    section h2 {
+        font-size: 1.9rem !important;
     }
 
-    p {
+    section p {
         font-size: 0.9rem;
     }
 
+    /* Tarjetas */
+    .tarjeta,
+    .card,
+    .caja-contacto {
+        width: 100%;
+        max-width: 340px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Imágenes */
     img {
         max-width: 100%;
         height: auto;
     }
 
+    /* Botones de inicio */
     .hero-botones {
         flex-direction: column;
+        align-items: center;
         gap: 10px !important;
     }
 
@@ -787,4 +803,5 @@ footer::after {
         max-width: 280px;
         text-align: center;
     }
+}
 }
