@@ -693,3 +693,41 @@ footer::after {
         0 0 10px rgba(201, 164, 92, 0.5),
         0 0 22px rgba(201, 164, 92, 0.3) !important;
 }
+
+/* Menú hamburguesa */
+
+.menu-hamburguesa {
+    display: none;
+    background: none;
+    border: none;
+    color: #6B4545;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Versión para celulares */
+@media (max-width: 768px) {
+
+    .menu-hamburguesa {
+        display: block;
+        margin: 10px auto 0;
+    }
+
+    nav {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 15px;
+    }
+
+    nav.menu-abierto {
+        display: flex;
+    }
+
+    nav a {
+        width: 100%;
+        max-width: 250px;
+        text-align: center;
+    }
+}

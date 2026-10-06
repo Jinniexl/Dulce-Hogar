@@ -49,3 +49,13 @@ if (botonCalcular) {
         resultado.textContent = `Total estimado: $${total}`;
     });
 }
+
+// Menú hamburguesa
+const botonMenu = document.getElementById("menu-hamburguesa");
+const menuNavegacion = document.getElementById("menu-navegacion");
+
+if (botonMenu && menuNavegacion) {
+    botonMenu.addEventListener("click", function () {
+        menuNavegacion.classList.toggle("menu-abierto");
+    });
+}
