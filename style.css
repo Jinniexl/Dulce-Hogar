@@ -805,3 +805,955 @@ footer::after {
     }
 }
 }
+
+
+/* Autenticación */
+
+.contenedor-autenticacion {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    background-color: #F3E5D0;
+}
+
+.formulario-autenticacion {
+    width: 100%;
+    max-width: 430px;
+    padding: 40px;
+    background-color: #FFF8F0;
+    border: 1px solid #E8B7C8;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(107, 69, 69, 0.10);
+    text-align: center;
+}
+
+.formulario-autenticacion h1 {
+    color: #A85D76;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.formulario-autenticacion h2 {
+    color: #6B4545;
+    font-family: 'Playfair Display', serif;
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.formulario-autenticacion p {
+    color: #6B4545;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.formulario-autenticacion form {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-top: 25px;
+}
+
+.formulario-autenticacion label {
+    color: #6B4545;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.formulario-autenticacion input {
+    padding: 13px;
+    margin-bottom: 18px;
+    border: 1px solid #E8B7C8;
+    border-radius: 8px;
+    background-color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.formulario-autenticacion input:focus {
+    border-color: #A85D76;
+}
+
+.formulario-autenticacion button {
+    padding: 14px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    background-color: #A85D76;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.formulario-autenticacion button:hover {
+    background-color: #6B4545;
+}
+
+.formulario-autenticacion a {
+    color: #A85D76;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.formulario-autenticacion a:hover {
+    text-decoration: underline;
+}
+
+#mensaje-registro,
+#mensaje-login {
+    margin-top: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .formulario-autenticacion {
+        padding: 30px 22px;
+    }
+
+    .formulario-autenticacion h1 {
+        font-size: 28px;
+    }
+
+    .formulario-autenticacion h2 {
+        font-size: 22px;
+    }
+}
+
+
+/* Efectos visuales de la Autenticación */
+
+/* Resplandor dorado de la tarjeta */
+.formulario-autenticacion {
+    position: relative;
+    border: 1px solid #C9A45C;
+    box-shadow:
+        0 5px 20px rgba(107, 69, 69, 0.10),
+        0 0 12px rgba(201, 164, 92, 0.18);
+    transition: box-shadow 0.4s ease,
+                transform 0.4s ease;
+}
+
+/* Brillo al pasar el cursor */
+.formulario-autenticacion:hover {
+    box-shadow:
+        0 8px 28px rgba(107, 69, 69, 0.13),
+        0 0 22px rgba(201, 164, 92, 0.30);
+    transform: translateY(-3px);
+}
+
+/* Detalles dorados en los títulos */
+.formulario-autenticacion h1 {
+    text-shadow: 0 0 12px rgba(201, 164, 92, 0.30);
+}
+
+/* Campos con borde dorado al seleccionarlos */
+.formulario-autenticacion input:focus {
+    border-color: #C9A45C;
+    box-shadow: 0 0 9px rgba(201, 164, 92, 0.30);
+}
+
+/* Botón con efecto dorado */
+.formulario-autenticacion button {
+    background: linear-gradient(
+        110deg,
+        #A85D76,
+        #B97889,
+        #A85D76
+    );
+    background-size: 200% 100%;
+    transition: background-position 0.4s ease,
+                box-shadow 0.4s ease,
+                transform 0.3s ease;
+}
+
+.formulario-autenticacion button:hover {
+    background-position: 100% 0;
+    box-shadow: 0 0 15px rgba(201, 164, 92, 0.55);
+    transform: translateY(-2px);
+}
+
+/* Pequeño detalle decorativo dorado */
+.formulario-autenticacion h2::after {
+    content: "";
+    display: block;
+    width: 55px;
+    height: 2px;
+    margin: 13px auto 0;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #C9A45C,
+        transparent
+    );
+}
+
+
+/* Corazones y destellos decorativos */
+
+.capa-decorativa {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.decoracion-flotante {
+    position: absolute;
+    display: block;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Corazones rosados */
+.corazon {
+    bottom: -40px;
+    color: #D98AA5;
+    opacity: 0;
+    text-shadow:
+        0 0 5px rgba(232, 183, 200, 0.7),
+        0 0 12px rgba(201, 164, 92, 0.2);
+
+    animation: corazones-flotando linear infinite;
+}
+
+@keyframes corazones-flotando {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(-15deg);
+        opacity: 0;
+    }
+
+    12% {
+        opacity: 0.45;
+    }
+
+    50% {
+        transform: translate3d(var(--desplazamiento), -55vh, 0)
+            rotate(15deg);
+        opacity: 0.55;
+    }
+
+    85% {
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: translate3d(
+            calc(var(--desplazamiento) * -0.5),
+            -115vh,
+            0
+        ) rotate(-15deg);
+        opacity: 0;
+    }
+}
+
+/* Destellos dorados */
+.destello {
+    color: #C9A45C;
+    opacity: 0;
+    text-shadow:
+        0 0 5px rgba(201, 164, 92, 0.8),
+        0 0 12px rgba(201, 164, 92, 0.5);
+
+    animation: destellos-brillantes ease-in-out infinite;
+}
+
+@keyframes destellos-brillantes {
+    0%, 100% {
+        opacity: 0.05;
+        transform: scale(0.6) rotate(0deg);
+    }
+
+    50% {
+        opacity: 0.85;
+        transform: scale(1.4) rotate(45deg);
+    }
+}
+
+/* Respetar la preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+    .decoracion-flotante {
+        animation: none !important;
+        opacity: 0.15;
+    }
+}
+
+
+/* Botones del Encabezado */
+
+.acciones-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botón de usuario */
+.boton-cuenta {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #C9A45C;
+    border-radius: 50%;
+    background-color: #FFF8F0;
+    color: #6B4545;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 9px;
+}
+
+.boton-cuenta svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.boton-cuenta:hover {
+    background-color: #E8B7C8;
+    color: #FFF8F0;
+    border-color: #A85D76;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(201, 164, 92, 0.35);
+}
+
+/* Ventana de Cuenta */
+
+.ventana-cuenta[hidden] {
+    display: none !important;
+}
+
+.ventana-cuenta {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.fondo-ventana {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(65, 42, 45, 0.45);
+    backdrop-filter: blur(4px);
+    animation: aparecer-fondo 0.3s ease;
+}
+
+.contenido-cuenta {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 430px;
+    padding: 42px 32px;
+    background-color: #FFF8F0;
+    border: 1.5px solid #C9A45C;
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(107, 69, 69, 0.2);
+    text-align: center;
+    animation: aparecer-cuenta 0.45s ease;
+}
+
+.cerrar-cuenta {
+    position: absolute;
+    top: 12px;
+    right: 17px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #A85D76;
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.cerrar-cuenta:hover {
+    transform: rotate(90deg);
+}
+
+.contenido-cuenta h2 {
+    margin: 12px 0;
+    color: #6B4545;
+    font-family: 'Playfair Display', serif;
+    font-style: normal;
+}
+
+.contenido-cuenta p {
+    color: #6B4545;
+    line-height: 1.6;
+}
+
+.decoracion-cuenta {
+    margin: 10px 0;
+    color: #C9A45C;
+    font-size: 23px;
+    letter-spacing: 8px;
+    animation: brillo-decoracion 2.5s ease-in-out infinite;
+}
+
+.opciones-cuenta {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 25px;
+}
+
+.opciones-cuenta button {
+    padding: 13px 20px;
+    border: 1px solid #C9A45C;
+    border-radius: 25px;
+    background-color: #E8B7C8;
+    color: #6B4545;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.opciones-cuenta button:hover {
+    background-color: #A85D76;
+    color: #FFF8F0;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(168, 93, 118, 0.25);
+}
+
+/* Animaciones */
+
+@keyframes aparecer-fondo {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes aparecer-cuenta {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes brillo-decoracion {
+    0%, 100% {
+        opacity: 0.65;
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 12px rgba(201, 164, 92, 0.65);
+    }
+}
+
+/* Diseño Responsive del Encabezado */
+
+/* PC */
+@media (min-width: 769px) {
+
+    header {
+        display: flex;
+        align-items: center;
+    }
+
+    header nav {
+        display: flex;
+        align-items: center;
+    }
+
+    .acciones-encabezado {
+        margin-left: auto;
+    }
+
+    .menu-hamburguesa {
+        display: none;
+    }
+}
+
+/* Celulares */
+@media (max-width: 768px) {
+
+    header {
+        display: flex;
+        align-items: center;
+    }
+
+    .acciones-encabezado {
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .boton-cuenta {
+        width: 38px;
+        height: 38px;
+    }
+
+    .menu-hamburguesa {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .contenido-cuenta {
+        padding: 38px 23px;
+    }
+}
+
+
+/* Posición de los elementos */
+
+/* PC: icono pegado al margen derecho */
+@media (min-width: 769px) {
+
+    header {
+        display: block;
+    }
+
+    .acciones-encabezado {
+        position: absolute;
+        right: 30px;
+        bottom: 18px;
+        display: flex;
+        align-items: center;
+        z-index: 5;
+    }
+
+    .boton-cuenta {
+        display: flex;
+    }
+
+    .menu-hamburguesa {
+        display: none;
+    }
+}
+
+/* CELULAR: usuario junto al menú hamburguesa */
+@media (max-width: 768px) {
+
+    header {
+        display: block;
+    }
+
+    .acciones-encabezado {
+        position: static;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin: 10px auto 0;
+    }
+
+    .boton-cuenta {
+        display: flex;
+    }
+
+    .menu-hamburguesa {
+        display: block;
+        margin: 0;
+    }
+}
+
+
+/* Animaciones de ventana*/
+
+.ventana-cuenta.cerrando .contenido-cuenta {
+    animation: cerrar-cuenta 0.25s ease forwards;
+}
+
+.ventana-cuenta.cerrando .fondo-ventana {
+    animation: desaparecer-fondo 0.25s ease forwards;
+}
+
+@keyframes cerrar-cuenta {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(15px) scale(0.95);
+    }
+}
+
+@keyframes desaparecer-fondo {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Ocultar paneles inactivos */
+.formulario-cuenta[hidden],
+.opciones-cuenta[hidden] {
+    display: none !important;
+}
+
+.formulario-cuenta {
+    text-align: left;
+}
+
+.formulario-cuenta label {
+    display: block;
+    margin: 12px 0 6px;
+    color: #6B4545;
+}
+
+.formulario-cuenta input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #E8B7C8;
+    border-radius: 10px;
+    background-color: #FFF8F0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.formulario-cuenta form button {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.volver-cuenta {
+    display: block;
+    margin: 15px auto 0;
+    border: none;
+    background: transparent;
+    color: #A85D76;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+/* Botones de los formularios de cuenta */
+
+.formulario-cuenta form button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px 20px;
+
+    border: 1px solid #C9A45C;
+    border-radius: 25px;
+
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F8DDE5,
+        #E8B7C8
+    );
+
+    color: #6B4545;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+
+    cursor: pointer;
+    transition: all 0.35s ease;
+    box-shadow: 0 3px 10px rgba(107, 69, 69, 0.10);
+}
+
+/* Brillo dorado que recorre el botón */
+.formulario-cuenta form button[type="submit"]::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 45%;
+    height: 200%;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.75),
+        rgba(201, 164, 92, 0.35),
+        transparent
+    );
+
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+/* Efecto al pasar el cursor */
+.formulario-cuenta form button[type="submit"]:hover {
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F3D5DF,
+        #E8B7C8
+    );
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 5px 16px rgba(168, 93, 118, 0.22),
+        0 0 12px rgba(201, 164, 92, 0.30);
+}
+
+.formulario-cuenta form button[type="submit"]:hover::before {
+    animation: brillo-boton 0.9s ease;
+}
+
+.formulario-cuenta form button[type="submit"]:active {
+    transform: scale(0.97);
+}
+
+/* Animación del brillo */
+@keyframes brillo-boton {
+    from {
+        left: -100%;
+    }
+
+    to {
+        left: 150%;
+    }
+}
+
+/* Botón volver */
+
+.volver-cuenta {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 18px auto 0;
+    padding: 8px 19px;
+
+    border: 1px solid #E8B7C8;
+    border-radius: 20px;
+
+    background-color: #FFF8F0;
+    color: #A85D76;
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.volver-cuenta:hover {
+    background-color: #F8DDE5;
+    border-color: #C9A45C;
+    color: #6B4545;
+
+    box-shadow: 0 0 10px rgba(201, 164, 92, 0.20);
+    transform: translateY(-2px);
+}
+
+.volver-cuenta:active {
+    transform: scale(0.96);
+}
+
+/* Estado de envío exitoso */
+
+.formulario-cuenta form button[type="submit"].envio-exitoso {
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #FFF8F0,
+        #E8B7C8
+    );
+
+    border-color: #C9A45C;
+
+    box-shadow:
+        0 0 10px rgba(201, 164, 92, 0.45),
+        0 0 22px rgba(201, 164, 92, 0.25);
+
+    animation: boton-exitoso 1.2s ease-in-out;
+}
+
+@keyframes boton-exitoso {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(201, 164, 92, 0.2);
+    }
+
+    50% {
+        box-shadow:
+            0 0 15px rgba(201, 164, 92, 0.65),
+            0 0 28px rgba(201, 164, 92, 0.35);
+    }
+}
+
+/* Scroll interno */
+.ventana-cuenta {
+    overflow-y: auto;
+}
+
+.contenido-cuenta {
+    max-height: calc(100vh - 40px);
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+}
+
+/* Barra de desplazamiento delicada */
+.contenido-cuenta::-webkit-scrollbar {
+    width: 3px;
+}
+
+.contenido-cuenta::-webkit-scrollbar-thumb {
+    background: #E8B7C8;
+    border-radius: 10px;
+}
+
+.contenido-cuenta::-webkit-scrollbar-thumb:hover {
+    background: #C9A45C;
+}
+
+.contenido-cuenta::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.contenido-cuenta::-webkit-scrollbar {
+    width: 3px;
+}
+
+.contenido-cuenta::-webkit-scrollbar-thumb {
+    background: #E8B7C8;
+    border-radius: 10px;
+    min-height: 35px;
+}
+
+.contenido-cuenta::-webkit-scrollbar-track {
+    background: transparent;
+    margin-block: 25px;
+}
+
+/* Destello animado en los botones de catálogo */
+.producto .boton-pedido {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F8DDE5,
+        #E8B7C8
+    );
+    box-shadow: 0 3px 10px rgba(107, 69, 69, 0.10);
+}
+
+/* Brillo que atraviesa el botón */
+.producto .boton-pedido::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.75),
+        rgba(201, 164, 92, 0.35),
+        transparent
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+/* Efecto al pasar el cursor */
+.producto .boton-pedido:hover {
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F3D5DF,
+        #E8B7C8
+    );
+    transform: translateY(-3px);
+    box-shadow:
+        0 5px 16px rgba(168, 93, 118, 0.22),
+        0 0 12px rgba(201, 164, 92, 0.30);
+}
+
+.producto .boton-pedido:hover::before {
+    animation: brillo-boton 0.9s ease;
+}
+
+.producto .boton-pedido:active {
+    transform: scale(0.97);
+}
+
+
+/* Destello animado del boton de pedido */
+.boton-enviar {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F8DDE5,
+        #E8B7C8
+    );
+    box-shadow: 0 3px 10px rgba(107, 69, 69, 0.10);
+}
+
+/* Brillo que atraviesa el botón */
+.boton-enviar::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.75),
+        rgba(201, 164, 92, 0.35),
+        transparent
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+/* Efecto al pasar el cursor */
+.boton-enviar:hover {
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F3D5DF,
+        #E8B7C8
+    );
+    transform: translateY(-3px);
+    box-shadow:
+        0 5px 16px rgba(168, 93, 118, 0.22),
+        0 0 12px rgba(201, 164, 92, 0.30);
+}
+
+.boton-enviar:hover::before {
+    animation: brillo-boton 0.9s ease;
+}
+
+.boton-enviar:active {
+    transform: scale(0.97);
+}
