@@ -104,6 +104,119 @@
     </div>
     </section>
 </main>
+<!-- Chat bot de Dulce Hogar -->
+
+<div class="chatbot-contenedor">
+
+    <!-- Botón flotante del gatito -->
+    <button
+        class="chatbot-boton"
+        id="chatbot-boton"
+        type="button"
+        aria-label="Abrir asistente virtual"
+        aria-expanded="false"
+        aria-controls="chatbot-ventana">
+        <span>
+            <img src="assets/Canela.png" alt="Asistente virtual de Dulce Hogar">
+        </span>
+    </button>
+
+    <!-- Ventana del chatbot -->
+    <section
+        class="chatbot-ventana"
+        id="chatbot-ventana"
+        aria-label="Asistente virtual"
+        hidden>
+
+        <!-- Encabezado -->
+        <div class="chatbot-encabezado">
+            <div class="chatbot-avatar">
+                <img src="assets/Canela.png" alt="Canela asistente">
+            </div>
+
+            <div>
+                <h3>Canela ♡</h3>
+                <p>Asistente de Dulce Hogar</p>
+            </div>
+
+            <button
+                class="chatbot-cerrar"
+                id="chatbot-cerrar"
+                type="button"
+                aria-label="Cerrar chat">
+                ×
+            </button>
+        </div>
+
+        <!-- Conversación -->
+        <div class="chatbot-mensajes" id="chatbot-mensajes">
+
+            <div class="chatbot-mensaje">
+                ¡Hola! Soy Canela, el asistente de Dulce Hogar.
+                ¿En qué puedo ayudarte? ♡
+            </div>
+
+        </div>
+
+        <!-- Opciones de preguntas -->
+
+<!-- Menú de preguntas del chatbot -->
+<div class="chatbot-opciones" id="chatbot-opciones">
+
+    <button
+        type="button"
+        class="chatbot-menu-toggle"
+        id="chatbot-menu-toggle"
+        aria-expanded="false"
+        aria-controls="chatbot-lista-opciones">
+        💬 Preguntas
+    </button>
+
+    <div class="chatbot-lista-opciones" id="chatbot-lista-opciones" hidden>
+
+        <p>¿Sobre qué te gustaría saber?</p>
+
+        <button type="button" class="chatbot-opcion" data-pregunta="productos">
+            🍰 Nuestros productos
+        </button>
+
+        <button type="button" class="chatbot-opcion" data-pregunta="precios">
+            💰 Precios
+        </button>
+
+        <button type="button" class="chatbot-opcion" data-pregunta="pedido">
+            🛒 Cómo realizar un pedido
+        </button>
+
+        <button type="button" class="chatbot-opcion" data-pregunta="contacto">
+            📍 Información de contacto
+        </button>
+
+    </div>
+        <!-- Preguntas escritas por el visitante -->
+        <form class="chatbot-escritura" id="chatbot-formulario">
+            <input
+                type="text"
+                id="chatbot-pregunta"
+                placeholder="Escribe tu pregunta aquí..."
+                aria-label="Escribe tu pregunta"
+                maxlength="300"
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit" aria-label="Enviar pregunta">
+                ➤
+            </button>
+        </form>
+</div>
+
+
+    </section>
+
+</div>
+<!-- Fin del chat bot -->
+
 <footer>
     <h4>Hecho con amor, pensado para endulzar tus momentos ♡</h4>
     <p>&copy; 2026 Dulce Hogar. Repostería  artesanal. Todos los derechos reservados.</p>
