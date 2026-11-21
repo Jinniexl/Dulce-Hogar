@@ -2,6 +2,12 @@
 const mongoose = require("mongoose");
 
 const pedidoSchema = new mongoose.Schema({
+    // Cliente (con cuenta) que hizo el pedido
+    usuario: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
+        required: true
+    },
     nombre: {
         type: String,
         required: true
@@ -35,8 +41,14 @@ const pedidoSchema = new mongoose.Schema({
     },
     detalles: {
         type: String
+    },
+    // Estado que el administrador va actualizando
+    estado: {
+        type: String,
+        enum: ["pendiente", "confirmado", "entregado", "cancelado"],
+        default: "pendiente"
     }
-});
+}, { timestamps: true });
 
 const Pedido = mongoose.model("Pedido", pedidoSchema);
 

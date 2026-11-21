@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const usuarioSchema = new mongoose.Schema({
@@ -17,6 +16,12 @@ const usuarioSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    // "cliente" por defecto. Un administrador se crea con hacer-admin.js
+    rol: {
+        type: String,
+        enum: ["cliente", "admin"],
+        default: "cliente"
     }
 });
 
