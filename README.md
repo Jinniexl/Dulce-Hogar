@@ -1,7 +1,7 @@
 
 # Dulce Hogar 🍰
 
-**Dulce Hogar** es un sitio web desarrollado para una pastelería ficticia, orientado a presentar sus productos, facilitar la comunicación con los clientes y gestionar pedidos de manera organizada.
+**Dulce Hogar** es un sitio web desarrollado para una pastelería, orientado a presentar sus productos, facilitar la comunicación con los clientes y gestionar pedidos de manera organizada.
 
 El proyecto combina una interfaz visual inspirada en la repostería tradicional con herramientas de desarrollo web y servicios de almacenamiento de información.
 
