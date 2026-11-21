@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Panel de administración - Dulce Hogar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <header>
+    <img src="assets/logo.png" alt="Logo de Dulce Hogar">
+    <h1>Dulce Hogar</h1>
+    <button class="menu-hamburguesa" id="menu-hamburguesa">
+    ☰
+</button>
+    <nav id="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="historia.html">Nuestra Historia</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="pedidos.html">Pedidos</a>
+        <a href="contacto.html">Contacto</a>
+    </nav>
+</header>
+
+    <main class="admin">
+
+        <!-- Aviso cuando no hay sesión o no es administrador -->
+        <section class="admin-aviso" id="admin-aviso" hidden>
+            <h2>Panel de administración</h2>
+            <p id="admin-aviso-texto"></p>
+            <a class="admin-boton" href="index.html">Ir a iniciar sesión</a>
+        </section>
+
+        <!-- Panel privado -->
+        <section id="admin-panel" hidden>
+            <div class="admin-barra">
+                <div>
+                    <h2>Panel de administración</h2>
+                    <p class="admin-saludo">Sesión de <strong id="admin-nombre"></strong></p>
+                </div>
+                <button type="button" class="admin-boton admin-boton-suave" id="admin-salir">Cerrar sesión</button>
+            </div>
+
+            <div class="admin-resumen" id="admin-resumen"></div>
+
+            <div class="admin-filtros">
+                <label for="filtro-estado">Mostrar:</label>
+                <select id="filtro-estado">
+                    <option value="todos">Todos los pedidos</option>
+                    <option value="pendiente">Pendientes</option>
+                    <option value="confirmado">Confirmados</option>
+                    <option value="entregado">Entregados</option>
+                    <option value="cancelado">Cancelados</option>
+                </select>
+                <button type="button" class="admin-boton" id="admin-recargar">Actualizar</button>
+            </div>
+
+            <p class="admin-estado" id="admin-estado" role="status"></p>
+
+            <div class="lista-pedidos" id="lista-pedidos"></div>
+        </section>
+
+    </main>
+
+    <footer>
+    <h4>Hecho con amor, pensado para endulzar tus momentos ♡</h4>
+    <p>&copy; 2026 Dulce Hogar. Repostería  artesanal. Todos los derechos reservados.</p>
+</footer>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

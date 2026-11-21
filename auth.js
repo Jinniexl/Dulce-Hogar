@@ -15,7 +15,7 @@ if (formularioRegistro) {
         const mensaje = document.getElementById("mensaje-registro");
 
         try {
-            const respuesta = await fetch("http://localhost:3000/auth/registro", {
+            const respuesta = await fetch(API_URL + "/auth/registro", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -75,7 +75,7 @@ if (formularioLogin) {
         const mensaje = document.getElementById("mensaje-login");
 
         try {
-            const respuesta = await fetch("http://localhost:3000/auth/login", {
+            const respuesta = await fetch(API_URL + "/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -95,9 +95,18 @@ if (formularioLogin) {
                 mensaje.textContent = "¡Bienvenido/a a Dulce Hogar!";
                 mensaje.style.color = "#4B8B55";
 
-                // Cerrar la ventana después de iniciar sesión
+                // Los administradores van a su panel; los clientes cierran la ventana
                 setTimeout(() => {
-                    document.getElementById("cerrar-cuenta")?.click();
+                    if (datos.usuario.rol === "admin") {
+                        window.location.href = "admin.html";
+                    } else {
+                        document.getElementById("cerrar-cuenta")?.click();
+
+                        // En la página de pedidos, recargar para desbloquear el formulario
+                        if (document.getElementById("formulario-pedido")) {
+                            window.location.reload();
+                        }
+                    }
                 }, 1200);
 
             } else {

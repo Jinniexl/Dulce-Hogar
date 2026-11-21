@@ -59,6 +59,19 @@ const mensajePedido = document.querySelector(".mensaje-pedido");
 if (formularioPedido) {
     formularioPedido.addEventListener("submit", async function (event) {
         event.preventDefault();
+        // Solo se puede enviar un pedido con la sesión iniciada
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            mensajePedido.textContent =
+                "Debes iniciar sesión o crear una cuenta para enviar tu pedido.";
+            return;
+        }
+
+        const botonEnviar = formularioPedido.querySelector(".boton-enviar");
+        const textoBoton = botonEnviar.textContent;
+        botonEnviar.disabled = true;
+        botonEnviar.textContent = "Enviando...";
 
         const datosPedido = {
             nombre: document.getElementById("nombre").value,
@@ -73,10 +86,11 @@ if (formularioPedido) {
         };
 
         try {
-            const respuesta = await fetch("http://localhost:3000/pedidos", {
+            const respuesta = await fetch(API_URL + "/pedidos", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
                 },
                 body: JSON.stringify(datosPedido)
             });
@@ -84,7 +98,15 @@ if (formularioPedido) {
             const resultadoServidor = await respuesta.json();
 
             if (!respuesta.ok) {
-                throw new Error(resultadoServidor.mensaje || "No se pudo registrar el pedido.");
+                // Si la sesión expiró, se limpia para pedir iniciar sesión otra vez
+                if (respuesta.status === 401) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("usuario");
+                }
+
+                mensajePedido.textContent =
+                    resultadoServidor.mensaje || "No se pudo registrar el pedido.";
+                return;
             }
 
             mensajePedido.textContent =
@@ -103,8 +125,35 @@ if (formularioPedido) {
                 "No se pudo enviar el pedido. Verifica que el servidor esté funcionando e inténtalo nuevamente.";
 
             console.error("Error al enviar el pedido:", error);
+        } finally { botonEnviar.disabled = false;
+            botonEnviar.textContent = textoBoton;
         }
     });
+}
+// Aviso de sesión en la página de pedidos
+if (formularioPedido) {
+    const tokenGuardado = localStorage.getItem("token");
+    const usuarioGuardado = JSON.parse(localStorage.getItem("usuario") || "null");
+    const botonEnviarPedido = formularioPedido.querySelector(".boton-enviar");
+
+    if (!tokenGuardado || !usuarioGuardado) {
+        const aviso = document.createElement("p");
+        aviso.className = "aviso-sesion";
+        aviso.innerHTML =
+            'Para enviar tu pedido necesitas <a href="#" id="aviso-abrir-cuenta">iniciar sesión o crear una cuenta</a>.';
+
+        formularioPedido.before(aviso);
+
+        document.getElementById("aviso-abrir-cuenta").addEventListener("click", (evento) => {
+            evento.preventDefault();
+            document.getElementById("boton-cuenta")?.click();
+        });
+
+        if (botonEnviarPedido) botonEnviarPedido.disabled = true;
+    } else {
+        document.getElementById("nombre").value = usuarioGuardado.nombre;
+        document.getElementById("correo").value = usuarioGuardado.correo;
+    }
 }
 
 // Menú hamburguesa
@@ -115,6 +164,19 @@ if (botonMenu && menuNavegacion) {
     botonMenu.addEventListener("click", function () {
         menuNavegacion.classList.toggle("menu-abierto");
     });
+    // Enlace al panel de administración (solo se muestra a administradores)
+try {
+    const usuarioMenu = JSON.parse(localStorage.getItem("usuario") || "null");
+
+    if (menuNavegacion && usuarioMenu && usuarioMenu.rol === "admin") {
+        const enlaceAdmin = document.createElement("a");
+        enlaceAdmin.href = "admin.html";
+        enlaceAdmin.textContent = "Panel admin";
+        menuNavegacion.appendChild(enlaceAdmin);
+    }
+} catch (error) {
+    console.error("No se pudo leer la sesión:", error);
+}
 }
 
 
@@ -414,7 +476,7 @@ if (chatbotMensajes && chatbotListaOpciones) {
 
 // Chat híbrido: preguntas escritas (respuestas fijas + Gemini)
 
-const URL_CHAT_IA = "http://localhost:3000/chat";
+const URL_CHAT_IA = API_URL + "/chat";
 
 function guardarConversacion() {
     sessionStorage.setItem("dulceHogarChat", chatbotMensajes.innerHTML);
@@ -489,9 +551,9 @@ function buscarRespuestaFija(texto) {
 // Pregunta a Gemini a través de tu backend
 async function preguntarALaIA(texto) {
     const control = new AbortController();
-    const limite = setTimeout(() => control.abort(), 20000);
+    const limite = setTimeout(() => control.abort(), 60000);
 
-    try {
+    try {   
         const respuesta = await fetch(URL_CHAT_IA, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -535,7 +597,7 @@ if (chatbotFormulario && chatbotPregunta && chatbotMensajes) {
         const botonEnviar = chatbotFormulario.querySelector("button[type='submit']");
         if (botonEnviar) botonEnviar.disabled = true;
 
-        const pensando = crearBurbuja("Michi está escribiendo... 💭", false);
+        const pensando = crearBurbuja("Canela está escribiendo... 💭", false);
 
         try {
             const textoIA = await preguntarALaIA(texto);
@@ -543,7 +605,7 @@ if (chatbotFormulario && chatbotPregunta && chatbotMensajes) {
         } catch (error) {
             console.error("Error con el asistente:", error);
             pensando.textContent =
-                "Ay, ahora mismo no puedo responder eso 🥺 Puedes elegir una de las preguntas del menú o escribirnos desde la sección de contacto.";
+                "Ahora mismo no puedo responder eso. Puedes elegir una de las preguntas del menú o escribirnos desde la sección de contacto.";
         }
 
         if (botonEnviar) botonEnviar.disabled = false;
