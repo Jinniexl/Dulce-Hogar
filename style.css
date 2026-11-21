@@ -2371,3 +2371,155 @@ footer::after {
         animation: none;
     }
 }
+
+
+/* FORMULARIO DE CONTACTO */
+
+.seccion-formulario-contacto {
+    max-width: 700px;
+    margin: 55px auto;
+    padding: 35px;
+    background-color: #FFF8F0;
+    border: 1px solid #E8B7C8;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(107, 69, 69, 0.08);
+}
+
+.encabezado-formulario-contacto {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.encabezado-formulario-contacto h2 {
+    color: #A85D76;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 12px;
+}
+
+.encabezado-formulario-contacto p {
+    color: #6B4545;
+    line-height: 1.7;
+}
+
+#formulario-contacto-cliente {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.campo-contacto {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-contacto label {
+    color: #6B4545;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.campo-contacto input,
+.campo-contacto textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    border: 1px solid #E8B7C8;
+    border-radius: 10px;
+    background-color: #FFFFFF;
+    color: #6B4545;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    outline: none;
+}
+
+.campo-contacto input:focus,
+.campo-contacto textarea:focus {
+    border-color: #A85D76;
+    box-shadow: 0 0 0 3px rgba(232, 183, 200, 0.2);
+}
+
+.campo-contacto textarea {
+    resize: vertical;
+}
+
+.boton-enviar-contacto {
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    background-color: #A85D76;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.boton-enviar-contacto:hover {
+    background-color: #8F4962;
+}
+
+#respuesta-contacto {
+    text-align: center;
+    font-size: 13px;
+    color: #6B4545;
+}
+
+
+/* Destello animado del botón de contacto */
+.boton-enviar-contacto {
+    position: relative;
+    overflow: hidden;
+    color: #A85D76;
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F8DDE5,
+        #E8B7C8
+    );
+    border: 1px solid #C9A45C;
+    box-shadow: 0 3px 10px rgba(107, 69, 69, 0.10);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Brillo que atraviesa el botón */
+.boton-enviar-contacto::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.75),
+        rgba(201, 164, 92, 0.35),
+        transparent
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+}
+
+/* Efecto al pasar el cursor */
+.boton-enviar-contacto:hover {
+    background: linear-gradient(
+        135deg,
+        #E8B7C8,
+        #F3D5DF,
+        #E8B7C8
+    );
+    transform: translateY(-3px);
+    box-shadow:
+        0 5px 16px rgba(168, 93, 118, 0.22),
+        0 0 12px rgba(201, 164, 92, 0.30);
+}
+
+.boton-enviar-contacto:hover::before {
+    animation: brillo-boton 0.9s ease;
+}
+
+/* Efecto al presionar */
+.boton-enviar-contacto:active {
+    transform: scale(0.97);
+}

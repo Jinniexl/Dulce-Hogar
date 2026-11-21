@@ -9,6 +9,7 @@ const authRoutes = require("./routes/auth");
 const { verificarToken, soloAdmin } = require("./middleware/permisos");
 const Producto = require("./models/producto");
 const Pedido = require("./models/Pedido");
+const Mensaje = require("./models/Mensaje");
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -154,6 +155,83 @@ app.delete("/productos/:id", soloAdmin, async (req, res) => {
     }
 });
 
+
+// ---------- Mensajes de contacto ----------
+
+// Guardar un mensaje enviado desde el formulario
+app.post("/contacto", async (req, res) => {
+    try {
+        const { nombre, correo, telefono, mensaje } = req.body;
+
+        if (
+            typeof nombre !== "string" ||
+            typeof correo !== "string" ||
+            typeof telefono !== "string" ||
+            typeof mensaje !== "string"
+        ) {
+            return res.status(400).json({
+                mensaje: "Completa todos los campos correctamente"
+            });
+        }
+
+        if (
+            !nombre.trim() ||
+            !correo.trim() ||
+            !telefono.trim() ||
+            !mensaje.trim()
+        ) {
+            return res.status(400).json({
+                mensaje: "Todos los campos son obligatorios"
+            });
+        }
+
+        if (
+            nombre.length > 100 ||
+            correo.length > 150 ||
+            telefono.length > 20 ||
+            mensaje.length > 1000
+        ) {
+            return res.status(400).json({
+                mensaje: "Uno de los campos supera el límite permitido"
+            });
+        }
+
+        const nuevoMensaje = new Mensaje({
+            nombre: nombre.trim(),
+            correo: correo.trim(),
+            telefono: telefono.trim(),
+            mensaje: mensaje.trim()
+        });
+
+        await nuevoMensaje.save();
+
+        res.status(201).json({
+            mensaje: "Tu mensaje se ha enviado correctamente"
+        });
+
+    } catch (error) {
+        console.error("Error al guardar el mensaje:", error);
+
+        res.status(500).json({
+            mensaje: "No se pudo enviar el mensaje"
+        });
+    }
+});
+
+// Consultar mensajes: solo administrador
+app.get("/contacto", soloAdmin, async (req, res) => {
+    try {
+        const mensajes = await Mensaje.find().sort({ fecha: -1 });
+        res.json(mensajes);
+
+    } catch (error) {
+        console.error("Error al obtener los mensajes:", error);
+
+        res.status(500).json({
+            mensaje: "Error al obtener los mensajes"
+        });
+    }
+});
 
 // ---------- Pedidos ----------
 

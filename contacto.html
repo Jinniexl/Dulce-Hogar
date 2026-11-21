@@ -124,6 +124,77 @@
     </section>
 </div>
 </header>
+
+<section class="seccion-formulario-contacto" id="formulario-contacto">
+
+    <div class="encabezado-formulario-contacto">
+        <h2>¡Queremos conocer tu opinión! ♡</h2>
+        <p>
+            Tus comentarios y sugerencias son importantes para nosotros.
+            Cuéntanos qué podemos mejorar o comparte tus ideas.
+        </p>
+    </div>
+
+    <form id="formulario-contacto-cliente">
+
+        <div class="campo-contacto">
+            <label for="nombre-contacto">Nombre completo</label>
+            <input
+                type="text"
+                id="nombre-contacto"
+                name="nombre"
+                placeholder="Escribe tu nombre"
+                maxlength="100"
+                required
+            >
+        </div>
+
+        <div class="campo-contacto">
+            <label for="correo-contacto">Correo electrónico</label>
+            <input
+                type="email"
+                id="correo-contacto"
+                name="correo"
+                placeholder="ejemplo@correo.com"
+                maxlength="150"
+                required
+            >
+        </div>
+
+        <div class="campo-contacto">
+            <label for="telefono-contacto">Número de teléfono</label>
+            <input
+                type="tel"
+                id="telefono-contacto"
+                name="telefono"
+                placeholder="Ej. 096 000 0000"
+                maxlength="20"
+                required
+            >
+        </div>
+
+        <div class="campo-contacto">
+            <label for="mensaje-contacto">Mensaje o sugerencia</label>
+            <textarea
+                id="mensaje-contacto"
+                name="mensaje"
+                placeholder="Escribe aquí tu consulta, comentario o sugerencia..."
+                maxlength="1000"
+                rows="5"
+                required
+            ></textarea>
+        </div>
+
+        <button type="submit" class="boton-enviar-contacto">
+            Enviar mensaje ♡
+        </button>
+
+        <p id="respuesta-contacto" aria-live="polite"></p>
+
+    </form>
+
+</section>
+
     <main>
     <section id="contacto">
         <h2>¡Contactáctanos!</h2>

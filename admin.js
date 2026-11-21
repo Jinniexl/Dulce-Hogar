@@ -27,6 +27,13 @@
     const botonRecargar = document.getElementById("admin-recargar");
     const botonSalir = document.getElementById("admin-salir");
 
+    // Elementos de los mensajes de contacto
+const listaMensajes = document.getElementById("lista-mensajes");
+const estadoMensajes = document.getElementById("admin-mensajes-estado");
+const botonRecargarMensajes = document.getElementById("admin-recargar-mensajes");
+
+let mensajes = [];
+
     // Si esta página no es el panel, no hacer nada
     if (!panel || !aviso) return;
 
@@ -283,6 +290,93 @@
 
     // ---------- Acciones ----------
 
+// ---------- Mensajes de contacto ----------
+
+function mostrarEstadoMensajes(texto, esError = false) {
+    estadoMensajes.textContent = texto;
+    estadoMensajes.classList.toggle("error", esError);
+}
+
+function crearTarjetaMensaje(mensaje) {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "mensaje-tarjeta";
+
+    const titulo = document.createElement("h3");
+    titulo.textContent = mensaje.nombre || "Cliente";
+    tarjeta.appendChild(titulo);
+
+    const correo = document.createElement("p");
+    const enlaceCorreo = document.createElement("a");
+    enlaceCorreo.href = "mailto:" + mensaje.correo;
+    enlaceCorreo.textContent = mensaje.correo;
+    correo.append("Correo: ", enlaceCorreo);
+    tarjeta.appendChild(correo);
+
+    const telefono = document.createElement("p");
+    const enlaceTelefono = document.createElement("a");
+    enlaceTelefono.href = "tel:" + mensaje.telefono;
+    enlaceTelefono.textContent = mensaje.telefono;
+    telefono.append("Teléfono: ", enlaceTelefono);
+    tarjeta.appendChild(telefono);
+
+    const textoMensaje = document.createElement("p");
+    const etiqueta = document.createElement("strong");
+    etiqueta.textContent = "Mensaje: ";
+    textoMensaje.append(etiqueta, document.createTextNode(mensaje.mensaje || ""));
+    tarjeta.appendChild(textoMensaje);
+
+    if (mensaje.fecha) {
+        const fecha = document.createElement("small");
+        fecha.textContent = "Recibido: " +
+            new Date(mensaje.fecha).toLocaleString("es-EC");
+        tarjeta.appendChild(fecha);
+    }
+
+    return tarjeta;
+}
+
+async function cargarMensajes() {
+    botonRecargarMensajes.disabled = true;
+    mostrarEstadoMensajes("Cargando mensajes...");
+
+    try {
+        mensajes = await pedirAlServidor("/contacto");
+
+        listaMensajes.replaceChildren();
+
+        if (mensajes.length === 0) {
+            const vacio = document.createElement("p");
+            vacio.className = "sin-mensajes";
+            vacio.textContent = "Todavía no hay mensajes de contacto.";
+            listaMensajes.appendChild(vacio);
+        } else {
+            mensajes.forEach((mensaje) => {
+                listaMensajes.appendChild(crearTarjetaMensaje(mensaje));
+            });
+        }
+
+        mostrarEstadoMensajes(
+            mensajes.length + (mensajes.length === 1
+                ? " mensaje recibido."
+                : " mensajes recibidos.")
+        );
+
+    } catch (error) {
+        if (!error.manejado) {
+            console.error("Error al cargar los mensajes:", error);
+            mostrarEstadoMensajes(
+                error instanceof TypeError
+                    ? "No se pudo conectar con el servidor."
+                    : error.message,
+                true
+            );
+        }
+    } finally {
+        botonRecargarMensajes.disabled = false;
+    }
+}
+
+
     async function cargarPedidos() {
         botonRecargar.disabled = true;
         mostrarEstado("Cargando pedidos... (si el servidor estaba dormido puede tardar hasta 1 minuto)");
@@ -360,6 +454,7 @@
 
     filtroEstado.addEventListener("change", dibujarLista);
     botonRecargar.addEventListener("click", cargarPedidos);
+    botonRecargarMensajes.addEventListener("click", cargarMensajes);
 
     botonSalir.addEventListener("click", () => {
         limpiarSesion();
@@ -367,4 +462,5 @@
     });
 
     cargarPedidos();
+    cargarMensajes();
 })();

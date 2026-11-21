@@ -182,6 +182,65 @@ if (botonCalcular) {
     });
 }
 
+
+/* Enviar mensajes del formulario de contacto */
+
+const formularioContacto = document.getElementById("formulario-contacto-cliente");
+const respuestaContacto = document.getElementById("respuesta-contacto");
+
+if (formularioContacto) {
+    formularioContacto.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const botonEnviar = formularioContacto.querySelector(".boton-enviar-contacto");
+        const textoOriginal = botonEnviar.textContent;
+
+        const datosContacto = {
+            nombre: document.getElementById("nombre-contacto").value.trim(),
+            correo: document.getElementById("correo-contacto").value.trim(),
+            telefono: document.getElementById("telefono-contacto").value.trim(),
+            mensaje: document.getElementById("mensaje-contacto").value.trim()
+        };
+
+        botonEnviar.disabled = true;
+        botonEnviar.textContent = "Enviando...";
+
+        respuestaContacto.textContent = "";
+
+        try {
+            const respuesta = await fetch(API_URL + "/contacto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datosContacto)
+            });
+
+            const resultadoServidor = await respuesta.json();
+
+            if (!respuesta.ok) {
+                respuestaContacto.textContent =
+                    resultadoServidor.mensaje || "No se pudo enviar el mensaje.";
+                return;
+            }
+
+            respuestaContacto.textContent =
+                "¡Gracias por escribirnos! Tu mensaje se ha enviado correctamente. 💗";
+
+            formularioContacto.reset();
+
+        } catch (error) {
+            console.error("Error al enviar el mensaje:", error);
+
+            respuestaContacto.textContent =
+                "No se pudo enviar el mensaje. Verifica tu conexión e inténtalo nuevamente.";
+        } finally {
+            botonEnviar.disabled = false;
+            botonEnviar.textContent = textoOriginal;
+        }
+    });
+}
+
 // Enviar pedido al backend
 const formularioPedido = document.getElementById("formulario-pedido");
 const mensajePedido = document.querySelector(".mensaje-pedido");
