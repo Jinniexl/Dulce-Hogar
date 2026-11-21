@@ -1,4 +1,3 @@
-
 const postre = document.getElementById("producto");
 const opcionesGalletas = document.getElementById("opciones-galletas");
 const saborGalletas = document.getElementById("sabor-galletas");
@@ -29,26 +28,157 @@ if (postre && opcionesGalletas && saborGalletas) {
     });
 }
 
+// Nombres de los productos (para los productos adicionales)
+const nombresProductos = {
+    "pie-fresa": "Pie de fresa",
+    "pie-manzana": "Pie de manzana",
+    "cupcakes": "Cupcakes",
+    "pastel": "Pastel personalizado",
+    "galletas": "Galletas"
+};
+
+// Productos adicionales del pedido
+const contenedorExtra = document.getElementById("productos-extra");
+const botonAgregar = document.getElementById("agregar-producto");
+const MAX_PRODUCTOS = 6;
+
+// Cada elemento guarda los campos de una fila adicional
+let filasExtra = [];
+
+function crearFilaProducto() {
+    // Máximo de productos por pedido (el principal cuenta como uno)
+    if (filasExtra.length + 1 >= MAX_PRODUCTOS) return;
+
+    const fila = document.createElement("div");
+    fila.className = "producto-extra";
+
+    const selectProducto = document.createElement("select");
+    selectProducto.required = true;
+    selectProducto.setAttribute("aria-label", "Producto adicional");
+
+    const opcionVacia = document.createElement("option");
+    opcionVacia.value = "";
+    opcionVacia.textContent = "Selecciona un producto";
+    selectProducto.appendChild(opcionVacia);
+
+    Object.keys(nombresProductos).forEach((clave) => {
+        const opcion = document.createElement("option");
+        opcion.value = clave;
+        opcion.textContent = nombresProductos[clave];
+        selectProducto.appendChild(opcion);
+    });
+
+    // Sabor: solo aparece si el producto son galletas
+    const selectSabor = document.createElement("select");
+    selectSabor.style.display = "none";
+    selectSabor.setAttribute("aria-label", "Sabor de las galletas");
+
+    [["", "Selecciona un sabor"], ["chips", "Chips de chocolate"], ["vainilla", "Vainilla"]]
+        .forEach(([valor, texto]) => {
+            const opcion = document.createElement("option");
+            opcion.value = valor;
+            opcion.textContent = texto;
+            selectSabor.appendChild(opcion);
+        });
+
+    const inputCantidad = document.createElement("input");
+    inputCantidad.type = "number";
+    inputCantidad.min = "1";
+    inputCantidad.required = true;
+    inputCantidad.placeholder = "Cantidad";
+    inputCantidad.setAttribute("aria-label", "Cantidad del producto adicional");
+
+    const botonQuitar = document.createElement("button");
+    botonQuitar.type = "button";
+    botonQuitar.className = "quitar-producto";
+    botonQuitar.textContent = "Quitar";
+
+    const datosFila = { fila, selectProducto, selectSabor, inputCantidad };
+
+    selectProducto.addEventListener("change", () => {
+        const esGalleta = selectProducto.value === "galletas";
+        selectSabor.style.display = esGalleta ? "block" : "none";
+        selectSabor.required = esGalleta;
+        if (!esGalleta) selectSabor.value = "";
+    });
+
+    botonQuitar.addEventListener("click", () => {
+        filasExtra = filasExtra.filter((f) => f !== datosFila);
+        fila.remove();
+        actualizarBotonAgregar();
+    });
+
+    fila.append(selectProducto, selectSabor, inputCantidad, botonQuitar);
+    contenedorExtra.appendChild(fila);
+    filasExtra.push(datosFila);
+    actualizarBotonAgregar();
+}
+
+function actualizarBotonAgregar() {
+    if (!botonAgregar) return;
+    botonAgregar.disabled = filasExtra.length + 1 >= MAX_PRODUCTOS;
+}
+
+function limpiarFilasExtra() {
+    filasExtra.forEach((f) => f.fila.remove());
+    filasExtra = [];
+    actualizarBotonAgregar();
+}
+
+if (botonAgregar && contenedorExtra) {
+    botonAgregar.addEventListener("click", crearFilaProducto);
+}
+
+// Junta el producto principal y los adicionales en una lista
+function obtenerProductos() {
+    const productos = [{
+        producto: postre.value,
+        saborGalletas: saborGalletas.value,
+        cantidad: Number(cantidad.value)
+    }];
+
+    filasExtra.forEach((f) => {
+        productos.push({
+            producto: f.selectProducto.value,
+            saborGalletas: f.selectSabor.value,
+            cantidad: Number(f.inputCantidad.value)
+        });
+    });
+
+    return productos;
+}
+
+// Devuelve un mensaje de error, o "" si todo está bien
+function validarProductos(productos) {
+    for (const item of productos) {
+        if (item.producto === "" || !Number.isInteger(item.cantidad) || item.cantidad <= 0) {
+            return "Selecciona un producto e ingresa una cantidad válida.";
+        }
+
+        if (item.producto === "galletas" && item.saborGalletas === "") {
+            return "Selecciona un sabor para las galletas.";
+        }
+    }
+
+    return "";
+}
+
+function calcularTotal(productos) {
+    return productos.reduce((suma, item) => suma + precios[item.producto] * item.cantidad, 0);
+}
+
 // Calcular el total
 if (botonCalcular) {
     botonCalcular.addEventListener("click", function () {
-        const productoSeleccionado = postre.value;
-        const cantidadSeleccionada = Number(cantidad.value);
+        const productos = obtenerProductos();
+        const error = validarProductos(productos);
 
-        if (productoSeleccionado === "" || cantidadSeleccionada <= 0) {
-            resultado.textContent =
-                "Selecciona un producto e ingresa una cantidad válida.";
+        if (error) {
+            resultado.textContent = error;
             return;
         }
 
-        if (productoSeleccionado === "galletas" && saborGalletas.value === "") {
-            resultado.textContent = "Selecciona un sabor para las galletas.";
-            return;
-        }
-
-        const total = precios[productoSeleccionado] * cantidadSeleccionada;
-
-        resultado.textContent = `Total estimado: $${total}`;
+        resultado.textContent = `Total estimado: $${calcularTotal(productos)}`;
     });
 }
 
@@ -59,12 +189,20 @@ const mensajePedido = document.querySelector(".mensaje-pedido");
 if (formularioPedido) {
     formularioPedido.addEventListener("submit", async function (event) {
         event.preventDefault();
+
         // Solo se puede enviar un pedido con la sesión iniciada
         const token = localStorage.getItem("token");
 
         if (!token) {
-            mensajePedido.textContent =
-                "Debes iniciar sesión o crear una cuenta para enviar tu pedido.";
+            mostrarAvisoSesion();
+            return;
+        }
+
+        const productos = obtenerProductos();
+        const errorProductos = validarProductos(productos);
+
+        if (errorProductos) {
+            mensajePedido.textContent = errorProductos;
             return;
         }
 
@@ -78,9 +216,7 @@ if (formularioPedido) {
             correo: document.getElementById("correo").value,
             telefono: document.getElementById("telefono").value,
             pago: document.getElementById("pago").value,
-            producto: postre.value,
-            saborGalletas: saborGalletas.value,
-            cantidad: Number(cantidad.value),
+            items: productos,
             fecha: document.getElementById("fecha").value,
             detalles: document.getElementById("detalles").value
         };
@@ -102,6 +238,7 @@ if (formularioPedido) {
                 if (respuesta.status === 401) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("usuario");
+                    mostrarAvisoSesion();
                 }
 
                 mensajePedido.textContent =
@@ -113,6 +250,8 @@ if (formularioPedido) {
                 "¡Gracias por tu pedido! Se ha registrado correctamente. Pronto nos comunicaremos contigo.";
 
             formularioPedido.reset();
+            limpiarFilasExtra();
+            rellenarDatosUsuario();
 
             if (opcionesGalletas) {
                 opcionesGalletas.style.display = "none";
@@ -125,36 +264,102 @@ if (formularioPedido) {
                 "No se pudo enviar el pedido. Verifica que el servidor esté funcionando e inténtalo nuevamente.";
 
             console.error("Error al enviar el pedido:", error);
-        } finally { botonEnviar.disabled = false;
+        } finally {
+            botonEnviar.disabled = false;
             botonEnviar.textContent = textoBoton;
         }
     });
 }
-// Aviso de sesión en la página de pedidos
-if (formularioPedido) {
-    const tokenGuardado = localStorage.getItem("token");
-    const usuarioGuardado = JSON.parse(localStorage.getItem("usuario") || "null");
-    const botonEnviarPedido = formularioPedido.querySelector(".boton-enviar");
+// Ventana emergente: aparece solo si intentan enviar un pedido sin sesión
+function mostrarAvisoSesion() {
+    let ventana = document.getElementById("aviso-sesion-ventana");
 
-    if (!tokenGuardado || !usuarioGuardado) {
-        const aviso = document.createElement("p");
-        aviso.className = "aviso-sesion";
-        aviso.innerHTML =
-            'Para enviar tu pedido necesitas <a href="#" id="aviso-abrir-cuenta">iniciar sesión o crear una cuenta</a>.';
+    if (!ventana) {
+        ventana = document.createElement("div");
+        ventana.id = "aviso-sesion-ventana";
+        ventana.className = "aviso-sesion-fondo";
+        ventana.hidden = true;
+        ventana.setAttribute("role", "dialog");
+        ventana.setAttribute("aria-modal", "true");
 
-        formularioPedido.before(aviso);
+        const caja = document.createElement("div");
+        caja.className = "aviso-sesion-caja";
 
-        document.getElementById("aviso-abrir-cuenta").addEventListener("click", (evento) => {
-            evento.preventDefault();
+        const titulo = document.createElement("h3");
+        titulo.textContent = "¡Casi listo! 💗";
+
+        const texto = document.createElement("p");
+        texto.textContent = "Para enviar tu pedido necesitas iniciar sesión o crear una cuenta.";
+
+        const botones = document.createElement("div");
+        botones.className = "aviso-sesion-botones";
+
+        const botonIniciar = document.createElement("button");
+        botonIniciar.type = "button";
+        botonIniciar.textContent = "Iniciar sesión";
+
+        const botonCrear = document.createElement("button");
+        botonCrear.type = "button";
+        botonCrear.className = "aviso-sesion-secundario";
+        botonCrear.textContent = "Crear cuenta";
+
+        const botonCerrar = document.createElement("button");
+        botonCerrar.type = "button";
+        botonCerrar.className = "aviso-sesion-cerrar";
+        botonCerrar.textContent = "Ahora no";
+
+        const cerrarAviso = () => { ventana.hidden = true; };
+
+        // Cierra el aviso y abre la ventana de cuenta en el panel elegido
+        const abrirCuenta = (idPanel) => {
+            cerrarAviso();
             document.getElementById("boton-cuenta")?.click();
+            document.getElementById(idPanel)?.click();
+        };
+
+        botonIniciar.addEventListener("click", () => abrirCuenta("mostrar-login"));
+        botonCrear.addEventListener("click", () => abrirCuenta("mostrar-registro"));
+        botonCerrar.addEventListener("click", cerrarAviso);
+
+        ventana.addEventListener("click", (evento) => {
+            if (evento.target === ventana) cerrarAviso();
         });
 
-        if (botonEnviarPedido) botonEnviarPedido.disabled = true;
-    } else {
-        document.getElementById("nombre").value = usuarioGuardado.nombre;
-        document.getElementById("correo").value = usuarioGuardado.correo;
+        document.addEventListener("keydown", (evento) => {
+            if (evento.key === "Escape") cerrarAviso();
+        });
+
+        botones.append(botonIniciar, botonCrear);
+        caja.append(titulo, texto, botones, botonCerrar);
+        ventana.appendChild(caja);
+        document.body.appendChild(ventana);
+    }
+
+    ventana.hidden = false;
+}
+
+// Rellenar nombre y correo con los datos de la sesión (sin pisar lo que ya escribieron)
+function rellenarDatosUsuario() {
+    if (!formularioPedido) return;
+
+    try {
+        const usuarioGuardado = JSON.parse(localStorage.getItem("usuario") || "null");
+        const campoNombre = document.getElementById("nombre");
+        const campoCorreo = document.getElementById("correo");
+
+        if (usuarioGuardado) {
+            if (campoNombre && !campoNombre.value) campoNombre.value = usuarioGuardado.nombre;
+            if (campoCorreo && !campoCorreo.value) campoCorreo.value = usuarioGuardado.correo;
+        }
+    } catch (error) {
+        console.error("No se pudo leer la sesión:", error);
     }
 }
+
+rellenarDatosUsuario();
+
+// auth.js avisa cuando alguien inicia sesión
+document.addEventListener("sesion-iniciada", rellenarDatosUsuario);
 
 // Menú hamburguesa
 const botonMenu = document.getElementById("menu-hamburguesa");
@@ -441,7 +646,7 @@ if (chatbotMensajes && chatbotListaOpciones) {
 
         chatbotMensajes.appendChild(mensajeUsuario);
 
-        // Mostrar la respuesta de Michi
+        // Mostrar la respuesta de Canela
         const respuesta = document.createElement("div");
         respuesta.className = "chatbot-mensaje";
         respuesta.textContent = respuestaChatbot.mensaje;

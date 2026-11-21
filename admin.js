@@ -160,10 +160,20 @@
         const tarjeta = document.createElement("article");
         tarjeta.className = "pedido-tarjeta estado-" + estado;
 
+                // Pedidos nuevos traen una lista de productos; los antiguos, un solo producto
+        const productos = Array.isArray(pedido.items) && pedido.items.length > 0
+            ? pedido.items
+            : [{
+                producto: pedido.producto,
+                saborGalletas: pedido.saborGalletas,
+                cantidad: pedido.cantidad
+            }];
+
         const titulo = document.createElement("h3");
-        titulo.textContent =
-            (NOMBRES_PRODUCTOS[pedido.producto] || pedido.producto) +
-            " × " + pedido.cantidad;
+        titulo.textContent = productos.length === 1
+            ? (NOMBRES_PRODUCTOS[productos[0].producto] || productos[0].producto) +
+              " × " + productos[0].cantidad
+            : "Pedido de " + productos.length + " productos";
         tarjeta.appendChild(titulo);
 
         // Usuario que hizo el pedido (los pedidos antiguos no tienen cuenta)
@@ -181,10 +191,28 @@
             tarjeta.appendChild(crearLinea("Correo del pedido", pedido.correo));
         }
 
-        if (pedido.saborGalletas) {
-            tarjeta.appendChild(
-                crearLinea("Sabor", NOMBRES_SABORES[pedido.saborGalletas] || pedido.saborGalletas)
-            );
+        // Lista de productos (con sabor y subtotal cuando existen)
+        if (productos.length > 1 || productos[0].saborGalletas) {
+            productos.forEach((item) => {
+                let texto =
+                    (NOMBRES_PRODUCTOS[item.producto] || item.producto) + " × " + item.cantidad;
+
+                if (item.saborGalletas) {
+                    texto += " (" + (NOMBRES_SABORES[item.saborGalletas] || item.saborGalletas) + ")";
+                }
+
+                if (item.precio) {
+                    texto += " — $" + item.precio * item.cantidad;
+                }
+
+                const linea = document.createElement("p");
+                linea.textContent = "• " + texto;
+                tarjeta.appendChild(linea);
+            });
+        }
+
+        if (typeof pedido.total === "number") {
+            tarjeta.appendChild(crearLinea("Total", "$" + pedido.total));
         }
 
         tarjeta.appendChild(crearLinea("Pago", pedido.pago));

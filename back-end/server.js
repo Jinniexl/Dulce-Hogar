@@ -157,18 +157,84 @@ app.delete("/productos/:id", soloAdmin, async (req, res) => {
 
 // ---------- Pedidos ----------
 
+// Precios oficiales: el servidor calcula el total, no confía en la página
+const PRECIOS = {
+    "pie-fresa": 16,
+    "pie-manzana": 16,
+    "cupcakes": 12,
+    "pastel": 30,
+    "galletas": 10
+};
+const SABORES_GALLETAS = ["chips", "vainilla"];
+const MAX_PRODUCTOS_PEDIDO = 6;
+
+// Revisa la lista de productos y calcula el total. Devuelve { error } o { items, total }
+function prepararProductos(entrada) {
+    if (!Array.isArray(entrada) || entrada.length === 0) {
+        return { error: "Agrega al menos un producto" };
+    }
+
+    if (entrada.length > MAX_PRODUCTOS_PEDIDO) {
+        return { error: "Un pedido puede tener máximo " + MAX_PRODUCTOS_PEDIDO + " productos" };
+    }
+
+    const items = [];
+    let total = 0;
+
+    for (const item of entrada) {
+        const producto = item && item.producto;
+        const cantidad = item && item.cantidad;
+
+        if (!Object.prototype.hasOwnProperty.call(PRECIOS, producto)) {
+            return { error: "Producto no válido" };
+        }
+
+        if (!Number.isInteger(cantidad) || cantidad < 1 || cantidad > 100) {
+            return { error: "La cantidad debe ser un número entre 1 y 100" };
+        }
+
+        let saborGalletas = "";
+
+        if (producto === "galletas") {
+            if (!SABORES_GALLETAS.includes(item.saborGalletas)) {
+                return { error: "Selecciona un sabor para las galletas" };
+            }
+            saborGalletas = item.saborGalletas;
+        }
+
+        items.push({ producto, saborGalletas, cantidad, precio: PRECIOS[producto] });
+        total += PRECIOS[producto] * cantidad;
+    }
+
+    return { items, total };
+}
+
 // Crear un pedido: solo clientes con la sesión iniciada
 app.post("/pedidos", verificarToken, async (req, res) => {
     try {
+        // Acepta la lista nueva (items) o un solo producto con el formato antiguo
+        const entrada = Array.isArray(req.body.items)
+            ? req.body.items
+            : [{
+                producto: req.body.producto,
+                saborGalletas: req.body.saborGalletas,
+                cantidad: req.body.cantidad
+            }];
+
+        const { items, total, error } = prepararProductos(entrada);
+
+        if (error) {
+            return res.status(400).json({ mensaje: error });
+        }
+
         const nuevoPedido = new Pedido({
             usuario: req.usuarioId,
             nombre: req.body.nombre,
             correo: req.body.correo,
             telefono: req.body.telefono,
             pago: req.body.pago,
-            producto: req.body.producto,
-            saborGalletas: req.body.saborGalletas,
-            cantidad: req.body.cantidad,
+            items,
+            total,
             fecha: req.body.fecha,
             detalles: req.body.detalles
         });
@@ -246,7 +312,7 @@ app.delete("/pedidos/:id", soloAdmin, async (req, res) => {
 });
 
 
-// ---------- Chat con IA (Canela) ----------
+// Chat con IA (Canela) 
 
 app.post("/chat", limitarChat, async (req, res) => {
     try {
